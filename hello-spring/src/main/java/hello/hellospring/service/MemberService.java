@@ -8,25 +8,30 @@ import java.util.List;
 import java.util.Optional;
 
 public class MemberService {
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    // DI
+    private final MemberRepository memberRepository;
+
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     // 회원 가입
     public long join(Member member) {
-        // 중복 id 비허용
+        // 중복된 이름 비허용
 //        Optional<Member> result = memberRepository.findById(member.getId());
 //        result.ifPresent(m -> {
-//            throw new IllegalStateException("이미 존재하는 아이디입니다.");
+//            throw new IllegalStateException("이미 존재하는 이름입니다.");
 //        });
 
-        vaildateDuplicateMember(member); // 중복 아이디 검증
+        vaildateDuplicateMember(member); // 중복 회원 검증
         memberRepository.save(member);
         return member.getId();
     }
 
     private void vaildateDuplicateMember(Member member) {
-        memberRepository.findById(member.getId())
+        memberRepository.findByName(member.getName())
                         .ifPresent(m -> {
-                            throw new IllegalStateException("이미 존재하는 아이디입니다.");
+                            throw new IllegalStateException("이미 존재하는 회원입니다.");
                         });
     }
 
