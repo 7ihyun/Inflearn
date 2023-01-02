@@ -20,16 +20,23 @@ public class MemberService {
     }
 
     // 회원 가입
-    public long join(Member member) {
+    public Long join(Member member) {
+        long start = System.currentTimeMillis();
         // 중복된 이름 비허용
 //        Optional<Member> result = memberRepository.findById(member.getId());
 //        result.ifPresent(m -> {
 //            throw new IllegalStateException("이미 존재하는 이름입니다.");
 //        });
 
-        vaildateDuplicateMember(member); // 중복 회원 검증
-        memberRepository.save(member);
-        return member.getId();
+        try {
+            vaildateDuplicateMember(member); // 중복 회원 검증
+            memberRepository.save(member);
+            return member.getId();
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("join = " + timeMs + "ms");
+        }
     }
 
     private void vaildateDuplicateMember(Member member) {
@@ -41,7 +48,15 @@ public class MemberService {
 
     // 전체 회원 조회
     public List<Member> findMembers() {
-        return memberRepository.findAll();
+        long start = System.currentTimeMillis();
+
+        try {
+            return memberRepository.findAll();
+        } finally {
+            long finish = System.currentTimeMillis();
+            long timeMs = finish - start;
+            System.out.println("findMembers = " + timeMs + "ms");
+        }
     }
 
     public Optional<Member> findOne(Long memberId) {

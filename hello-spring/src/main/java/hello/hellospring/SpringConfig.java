@@ -23,7 +23,6 @@ public class SpringConfig {
     public SpringConfig(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
-
     @Bean
     public MemberService memberService() {
         return new MemberService(memberRepository);
